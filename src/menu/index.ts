@@ -8,7 +8,7 @@ export function addPathPrefix(menu: IMenu, parentPath = "") {
 
   if (menu.children) {
     menu.children = menu.children.map((child) =>
-      addPathPrefix(child, fullPath),
+      addPathPrefix(child, fullPath)
     );
   }
   return {

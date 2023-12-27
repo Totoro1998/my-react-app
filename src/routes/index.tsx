@@ -6,7 +6,13 @@ const routes: RouteObject[] = [
   {
     path: "/",
     element: <RootLayout />,
-    children: [ReactRoutes],
+    children: [
+      ReactRoutes,
+      {
+        path: "*",
+        element: <div>Not Found</div>,
+      },
+    ],
   },
 ];
 export default routes;

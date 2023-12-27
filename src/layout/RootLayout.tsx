@@ -1,5 +1,5 @@
-import { Outlet } from "react-router-dom";
-import { Menu } from "antd";
+import { Outlet, useLocation } from "react-router-dom";
+import { Menu, MenuProps } from "antd";
 import { NavLink } from "react-router-dom";
 import menus, { addPathPrefix } from "@/menu";
 import { IMenu } from "@/types/app";
@@ -15,36 +15,15 @@ function getMenuItem(menu: IMenu) {
     key: menu.path,
   };
 }
+function generatePathArray(path: string) {
+  const pathArray = path.split("/").filter(Boolean);
+  return pathArray.map((_, index, array) => {
+    const partialPath = array.slice(0, index + 1).join("/");
+    return `/${partialPath}`;
+  });
+}
 const addPathPrefixMenus = menus.map((menu) => addPathPrefix(menu));
 
-function Sider() {
-  const items = useMemo(() => {
-    return addPathPrefixMenus.map((menu) => getMenuItem(menu));
-  }, []);
-
-  const [defaultSelectedKeys, setDefaultSelectedKeys] = useState<string[]>([]);
-
-  useEffect(() => {
-    const keyPath = localStorage.getItem("keyPath");
-    if (keyPath) {
-      setDefaultSelectedKeys(JSON.parse(keyPath));
-    }
-  }, []);
-
-  function handleSelect(data: any) {
-    localStorage.setItem("keyPath", JSON.stringify(data.keyPath));
-  }
-  return (
-    <div className="sider w-[--wrapper-main-sider-width]">
-      <Menu
-        mode="inline"
-        items={items}
-        onSelect={handleSelect}
-        selectedKeys={defaultSelectedKeys}
-      />
-    </div>
-  );
-}
 function Header() {
   return (
     <header
@@ -56,6 +35,38 @@ function Header() {
     >
       header
     </header>
+  );
+}
+
+function Sider() {
+  const items = useMemo(() => {
+    return addPathPrefixMenus.map((menu) => getMenuItem(menu));
+  }, []);
+
+  const location = useLocation();
+  const [openKeys, setOpenKeys] = useState<string[]>([]);
+  const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+
+  useEffect(() => {
+    setOpenKeys(generatePathArray(location.pathname));
+    setSelectedKeys([location.pathname]);
+  }, [location.pathname]);
+
+  const onOpenChange: MenuProps["onOpenChange"] = (keys) => {
+    const lastKey = keys.pop() as string;
+    setOpenKeys(generatePathArray(lastKey));
+  };
+
+  return (
+    <div className="sider w-[--wrapper-main-sider-width]">
+      <Menu
+        mode="inline"
+        items={items}
+        openKeys={openKeys}
+        selectedKeys={selectedKeys}
+        onOpenChange={onOpenChange}
+      />
+    </div>
   );
 }
 
