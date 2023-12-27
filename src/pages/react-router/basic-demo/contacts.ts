@@ -2,9 +2,9 @@ import localforage from "localforage";
 import { matchSorter } from "match-sorter";
 import sortBy from "sort-by";
 
-export async function getContacts(query) {
+export async function getContacts(query?: string | null) {
   await fakeNetwork(`getContacts:${query}`);
-  let contacts = await localforage.getItem("contacts");
+  let contacts = (await localforage.getItem("contacts")) as any[];
   if (!contacts) contacts = [];
   if (query) {
     contacts = matchSorter(contacts, query, { keys: ["first", "last"] });
@@ -22,25 +22,25 @@ export async function createContact() {
   return contact;
 }
 
-export async function getContact(id) {
+export async function getContact(id?: string) {
   await fakeNetwork(`contact:${id}`);
-  let contacts = await localforage.getItem("contacts");
+  let contacts = (await localforage.getItem("contacts")) as any[];
   let contact = contacts.find((contact) => contact.id === id);
   return contact ?? null;
 }
 
-export async function updateContact(id, updates) {
+export async function updateContact(id: string, updates: any) {
   await fakeNetwork();
-  let contacts = await localforage.getItem("contacts");
+  let contacts = (await localforage.getItem("contacts")) as any[];
   let contact = contacts.find((contact) => contact.id === id);
-  if (!contact) throw new Error("No contact found for", id);
+  if (!contact) throw new Error(`No contact found for ${id}`);
   Object.assign(contact, updates);
   await set(contacts);
   return contact;
 }
 
-export async function deleteContact(id) {
-  let contacts = await localforage.getItem("contacts");
+export async function deleteContact(id: string) {
+  let contacts = (await localforage.getItem("contacts")) as any[];
   let index = contacts.findIndex((contact) => contact.id === id);
   if (index > -1) {
     contacts.splice(index, 1);
@@ -50,23 +50,22 @@ export async function deleteContact(id) {
   return false;
 }
 
-function set(contacts) {
+function set(contacts: any[]) {
   return localforage.setItem("contacts", contacts);
 }
 
-// fake a cache so we don't slow down stuff we've already seen
-let fakeCache = {};
+let fakeCache: Recordable = {};
 
-async function fakeNetwork(key) {
+async function fakeNetwork(key?: string) {
   if (!key) {
     fakeCache = {};
   }
-
-  if (fakeCache[key]) {
-    return;
+  if (key) {
+    if (fakeCache[key]) {
+      return;
+    }
+    fakeCache[key] = true;
   }
-
-  fakeCache[key] = true;
   return new Promise((res) => {
     setTimeout(res, Math.random() * 800);
   });

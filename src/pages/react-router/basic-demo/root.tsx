@@ -7,15 +7,16 @@ import {
   useNavigation,
   useSubmit,
 } from "react-router-dom";
-import { getContacts, createContact } from "../contacts";
+import { getContacts, createContact } from "./contacts";
 import { useEffect } from "react";
+import "./index.css";
 
 export async function action() {
   const contact = await createContact();
   return redirect(`/contacts/${contact.id}/edit`);
 }
 
-export async function loader({ request }) {
+export async function loader({ request }: { request: Request }) {
   const url = new URL(request.url);
   const q = url.searchParams.get("q");
   const contacts = await getContacts(q);
@@ -23,12 +24,13 @@ export async function loader({ request }) {
 }
 
 export default function Root() {
-  const { contacts, q } = useLoaderData();
+  const { contacts, q } = useLoaderData() as { contacts: any[]; q: string };
   const navigation = useNavigation();
   const submit = useSubmit();
 
   useEffect(() => {
-    document.getElementById("q").value = q;
+    const input = document.getElementById("q") as HTMLInputElement;
+    input.value = q;
   }, [q]);
 
   const searching =
