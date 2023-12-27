@@ -1,0 +1,10 @@
+:root {
+  --wrapper-header-height: 64px;
+  --wrapper-main-sider-width: 360px;
+}
+
+/* @media screen and (max-width: 768px) {
+  :root {
+    --wrapper-header-height: 32px;
+  }
+} */

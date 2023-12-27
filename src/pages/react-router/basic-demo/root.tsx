@@ -9,7 +9,7 @@ import {
 } from "react-router-dom";
 import { getContacts, createContact } from "./contacts";
 import { useEffect } from "react";
-import "./index.css";
+import "./index.less";
 
 export async function action() {
   const contact = await createContact();
@@ -38,7 +38,7 @@ export default function Root() {
     new URLSearchParams(navigation.location.search).has("q");
 
   return (
-    <>
+    <div className="basic-demo">
       <div id="sidebar">
         <h1>React Router Contacts</h1>
         <div>
@@ -101,6 +101,6 @@ export default function Root() {
       >
         <Outlet />
       </div>
-    </>
+    </div>
   );
 }

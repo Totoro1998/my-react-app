@@ -1,3 +1,10 @@
+/* 注入Tailwind的基础样式和由插件注册的基础样式。 */
 @tailwind base;
+/* 注入Tailwind的 component classes 和由插件注册的 component classes 。 */
 @tailwind components;
+/* 注入Tailwind的 utility classes 和由插件注册的 utility classes 。 */
 @tailwind utilities;
+
+/* 使用这个指令来控制Tailwind注入每个 class 的悬停、焦点、响应式、暗黑模式和其他变体的位置。*/
+/* 如果省略不写，Tailwind默认将这些 class 追加到样式表的最末尾 */
+@tailwind variants;
