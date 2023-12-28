@@ -13,7 +13,7 @@ import "./index.less";
 
 export async function action() {
   const contact = await createContact();
-  return redirect(`/contacts/${contact.id}/edit`);
+  return redirect(`../contacts/${contact.id}/edit`);
 }
 
 export async function loader({ request }: { request: Request }) {
