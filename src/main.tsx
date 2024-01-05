@@ -11,7 +11,8 @@ const container = document.getElementById("root");
 const root = createRoot(container as HTMLDivElement);
 
 root.render(
-  <StrictMode>
-    <RouterProvider router={router} />
-  </StrictMode>,
+  // <StrictMode>
+  //   <RouterProvider router={router} />
+  // </StrictMode>,
+  <RouterProvider router={router} />
 );

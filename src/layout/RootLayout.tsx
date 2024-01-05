@@ -16,6 +16,9 @@ function getMenuItem(menu: IMenu) {
   };
 }
 function generatePathArray(path: string) {
+  if(!path){
+    return []
+  }
   const pathArray = path.split("/").filter(Boolean);
   return pathArray.map((_, index, array) => {
     const partialPath = array.slice(0, index + 1).join("/");
